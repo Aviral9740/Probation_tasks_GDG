@@ -3,29 +3,24 @@ import joblib
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# -------------------------------------------------------
-# ⚙️ Load model and vectorizer with caching
-# -------------------------------------------------------
+#Loading model and vectorizer
 @st.cache_resource
 def load_tfidf_model():
     try:
-        model = joblib.load("RandomForesttf.pkl")  # Your trained model
-        vectorizer = joblib.load("tfidf_vectorizer.pkl")  # TF-IDF vectorizer
+        model = joblib.load("RandomForesttf.pkl")  
+        vectorizer = joblib.load("Vectorizer.pkl")  
         return model, vectorizer
     except FileNotFoundError as e:
-        st.error("❌ Model or vectorizer file not found. Make sure both 'RandomForesttf.pkl' and 'tfidf_vectorizer.pkl' exist.")
+        st.error("Model or vectorizer file not found. Make sure both 'RandomForesttf.pkl' and 'tfidf_vectorizer.pkl' exist.")
         st.stop()
     except Exception as e:
-        st.error(f"⚠️ Error loading model/vectorizer: {e}")
+        st.error(f"Error loading model/vectorizer: {e}")
         st.stop()
 
 # Load resources
 with st.spinner("Loading model and vectorizer..."):
     model, tfidf_vectorizer = load_tfidf_model()
 
-# -------------------------------------------------------
-# 🧠 Fake News Prediction Function
-# -------------------------------------------------------
 def predict_fake_news(text):
     transformed_text = tfidf_vectorizer.transform([text])
     prediction = model.predict(transformed_text)[0]
@@ -34,9 +29,7 @@ def predict_fake_news(text):
         confidence = np.max(model.predict_proba(transformed_text)) * 100
     return prediction, confidence
 
-# -------------------------------------------------------
-# 🌐 Streamlit UI
-# -------------------------------------------------------
+#UI
 st.set_page_config(page_title="Fake News Detection", layout="centered")
 
 st.markdown(
@@ -63,9 +56,9 @@ if st.button("Check News Authenticity"):
 
         # Display results
         if prediction == 1:
-            st.success("✅ This seems to be Real News.")
+            st.success("This seems to be Real News.")
         else:
-            st.error("🚨 This seems to be Fake News.")
+            st.error("This seems to be Fake News.")
 
         if confidence is not None:
             st.info(f"Model Confidence: **{confidence:.2f}%**")
