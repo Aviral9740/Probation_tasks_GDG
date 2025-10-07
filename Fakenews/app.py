@@ -7,8 +7,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 @st.cache_resource
 def load_tfidf_model():
     try:
-        model = joblib.load("RandomForest.pkl")  
-        vectorizer = joblib.load("Vectorizer.pkl")  
+        model = joblib.load("Fakenews/RandomForest.pkl")  
+        vectorizer = joblib.load("Fakenews/Vectorizer.pkl")  
         return model, vectorizer
     except FileNotFoundError as e:
         st.error("Model or vectorizer file not found. Make sure both 'RandomForesttf.pkl' and 'tfidf_vectorizer.pkl' exist.")
